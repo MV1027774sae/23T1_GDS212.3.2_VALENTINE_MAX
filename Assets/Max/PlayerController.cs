@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Windows;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,14 +18,36 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private StatManager statManager;
 
+    [SerializeField] private EnemyController enemyController;
+
     private CharacterController controls;
     private StarterAssetsInputs inputs;
 
+    [SerializeField] private float minimumPoolRange = 0;
+    [SerializeField] private float maximumPoolRange = 11;
+
+    private float baseAttackStat = 5;
+    private float baseAttackSpeedStat = 5;
+
+    private float attackStat;
+    private float attackSpeedStat;
+
+    [SerializeField] private float attackModifier;
+    [SerializeField] private float attackSpeedModifier;
+
+    public float attackStatTotal;
+    public float attackSpeedStatTotal;
+
+    private float damage;
+
+    [SerializeField] private TextMeshProUGUI textTMPTwo;
 
     void Awake()
     {
         controls = GetComponent<CharacterController>();
         inputs = GetComponent<StarterAssetsInputs>();
+
+        RandomiseAttack();
     }
 
     // Update is called once per frame
@@ -37,20 +60,26 @@ public class PlayerController : MonoBehaviour
         //}
     }
 
+    public void RandomiseAttack()
+    {
+        attackStat = Random.Range(minimumPoolRange, maximumPoolRange);
+        attackSpeedStat = Random.Range(minimumPoolRange, maximumPoolRange);
+
+        float attackStatTotal = baseAttackStat + attackStat * attackModifier;
+        float attackSpeedStatTotal = baseAttackSpeedStat + attackSpeedStat * attackSpeedModifier;
+
+        damage = attackStatTotal;
+        textTMPTwo.text = "Atk Power = " + Mathf.Round(damage).ToString();
+    }
+
     public void Attack()
     {
-        Collider[] hitEnemy = Physics.OverlapBox(attackPoint.position, new Vector3(attackRangeX, attackRangeY), Quaternion.identity, enemyLayer);
+        Collider[] hitEnemy = Physics.OverlapBox(attackPoint.position, new Vector3(attackRangeX, 1, attackRangeY), Quaternion.identity, enemyLayer);
 
-        foreach(Collider enemy in hitEnemy)
+        foreach(Collider collider in hitEnemy)
         {
-            enemy.GetComponent<HealthManager>().TakeDamage(statManager.attackStatTotal);
+                collider.GetComponent<EnemyController>().TakeEnemyDamage(damage);
         }
-
-        //GameObject spark = Instantiate(sparkPrefab);
-        //spark.transform.position = sparkPrefab.transform.position;
-
-        //ParticleSystem attackSparkParticles = Instantiate(sparkParticles);
-        //attackSparkParticles.transform.position = spark
         attackEffect.Play();
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StatManager : MonoBehaviour
 {
@@ -38,9 +39,10 @@ public class StatManager : MonoBehaviour
     void Start()
     {
         RandomiseStats();
-        
-
         Debug.Log(currentHealth);
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -48,9 +50,10 @@ public class StatManager : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
+            SceneManager.LoadScene(1);
         }
 
-        textTMP.text = Mathf.Round(currentHealth).ToString();
+        textTMP.text = "HP = " + Mathf.Round(currentHealth).ToString();
     }
 
     public void RandomiseStats()
@@ -68,5 +71,10 @@ public class StatManager : MonoBehaviour
         Debug.Log("Health stat = " + Mathf.Round(healthStatTotal));
         Debug.Log("Attack stat = " + Mathf.Round(attackStatTotal));
         Debug.Log("Attack speed stat = " + Mathf.Round(attackSpeedStatTotal));
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
     }
 }
