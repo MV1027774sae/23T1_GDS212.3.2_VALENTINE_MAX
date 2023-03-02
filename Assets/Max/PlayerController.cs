@@ -1,6 +1,10 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,23 +13,31 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackRangeY;
     [SerializeField] private LayerMask enemyLayer;
 
-    private StatManager statManager;
+    [SerializeField] private ParticleSystem attackEffect;
 
-    void Start()
+    [SerializeField] private StatManager statManager;
+
+    private CharacterController controls;
+    private StarterAssetsInputs inputs;
+
+
+    void Awake()
     {
-        
+        controls = GetComponent<CharacterController>();
+        inputs = GetComponent<StarterAssetsInputs>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            Attack();
-        }
+        
+        //{
+            //Attack();
+            //Debug.Log("Attack");
+        //}
     }
 
-    private void Attack()
+    public void Attack()
     {
         Collider[] hitEnemy = Physics.OverlapBox(attackPoint.position, new Vector3(attackRangeX, attackRangeY), Quaternion.identity, enemyLayer);
 
@@ -33,5 +45,18 @@ public class PlayerController : MonoBehaviour
         {
             enemy.GetComponent<HealthManager>().TakeDamage(statManager.attackStatTotal);
         }
+
+        //GameObject spark = Instantiate(sparkPrefab);
+        //spark.transform.position = sparkPrefab.transform.position;
+
+        //ParticleSystem attackSparkParticles = Instantiate(sparkParticles);
+        //attackSparkParticles.transform.position = spark
+        attackEffect.Play();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(attackPoint.position, new Vector3 (attackRangeX, 1, attackRangeY));
     }
 }

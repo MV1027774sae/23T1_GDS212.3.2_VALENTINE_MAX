@@ -26,16 +26,31 @@ public class StatManager : MonoBehaviour
     public float attackStatTotal;
     public float attackSpeedStatTotal;
 
-    [SerializeField] private TextMeshProUGUI healthUI;
-    
+    //[SerializeField] private TextMeshProUGUI healthUI;
+
+    [SerializeField] private TextMeshProUGUI textTMP;
+    //[SerializeField] private GameObject statManager;
+
+    public float baseHealth = 50;
+    public float currentHealth;
+    public bool isDead = false;
+
     void Start()
     {
         RandomiseStats();
+        
+
+        Debug.Log(currentHealth);
     }
 
     void Update()
     {
-        
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+        }
+
+        textTMP.text = Mathf.Round(currentHealth).ToString();
     }
 
     public void RandomiseStats()
@@ -48,7 +63,8 @@ public class StatManager : MonoBehaviour
         float attackStatTotal = baseAttackStat + attackStat * attackModifier;
         float attackSpeedStatTotal = baseAttackSpeedStat + attackSpeedStat * attackSpeedModifier;
 
-
+        currentHealth = (baseHealth + healthStatTotal);
+        
         Debug.Log("Health stat = " + Mathf.Round(healthStatTotal));
         Debug.Log("Attack stat = " + Mathf.Round(attackStatTotal));
         Debug.Log("Attack speed stat = " + Mathf.Round(attackSpeedStatTotal));

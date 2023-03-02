@@ -16,19 +16,19 @@ public class HealthManager : MonoBehaviour
 
     void Start()
     {
-        currentHealth = (baseHealth + statManagerScript.healthStatTotal);
+        //currentHealth = (baseHealth + statManagerScript);
 
-        Debug.Log(statManager.GetComponent<StatManager>().healthStatTotal);
+        //Debug.Log(statManager.GetComponent<StatManager>().healthStatTotal);
     }
 
     void Update()
     {
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-        }
+        //if (currentHealth <= 0)
+        //{
+            //currentHealth = 0;
+        //}
 
-        textTMP.text = currentHealth.ToString();
+        //textTMP.text = currentHealth.ToString();
     }
 
     public void TakeDamage(float damage)
